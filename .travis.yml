@@ -1,0 +1,32 @@
+language: python
+env:
+    - REPO=Cisco-Talos/pyrebox
+    - REPO=Cisco-Talos/dotNET_WinDBG
+    - REPO=Cisco-Talos/CASC
+    - REPO=Cisco-Talos/BASS
+    - REPO=Cisco-Talos/fnc-1
+    - REPO=Cisco-Talos/Decept
+    - REPO=Cisco-Talos/clamav-faq
+    - REPO=Cisco-Talos/smi_check
+    - REPO=Cisco-Talos/flokibot
+    - REPO=Cisco-Talos/goznym
+    - REPO=Cisco-Talos/ROPMEMU
+python:
+    - 2.7.13
+    - 3.6.2
+install:
+    - pip install flake8  # pytest  # add some test later
+before_script:
+    - URL=https://github.com/${REPO}
+    - echo ; echo -n "flake8 testing of ${URL} on " ; python -V
+    - git clone --depth=50 --branch=master ${URL} ~/${REPO}
+    - cd ~/${REPO}
+script:
+    - echo stop the build if there are Python syntax errors or undefined names
+    - echo ; echo -n "flake8 testing of ${URL} on " ; python -V
+    - time flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
+    - echo exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
+    - time flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+notifications:
+    on_success: change
+    on_failure: change  # `always` will be the setting once code changes slow down
